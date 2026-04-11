@@ -1,21 +1,25 @@
 import { View, StyleSheet, Text } from "react-native";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 interface ICardMenu {
     iconName: string,
     titleCard: string,
-    descriptionCard: string
+    descriptionCard: string,
+    color: string
 }
 
-export default function CardMenu({iconName, titleCard, descriptionCard}: ICardMenu) {
+export default function CardMenu({iconName, titleCard, descriptionCard, color}: ICardMenu) {
 
     const icon:any = {
-        userAdd: <AntDesign name="user-add" size={24} color="white" style={[styles.iconMenuItem, { backgroundColor: "#2577ff" }]} />,
-        users: <Feather name="users" size={24} color="white" style={[styles.iconMenuItem, { backgroundColor: "#00c14d" }]} />,
-        bookOpen: <Feather name="book-open" size={24} color="white" style={[styles.iconMenuItem, { backgroundColor: "#a232ff" }]} />,
-        documentText: <Ionicons name="document-text-outline" size={24} color="white" style={[styles.iconMenuItem, { backgroundColor: "#ff6200" }]} />
+        userAdd: <AntDesign name="user-add" size={24} color="white" style={[styles.iconMenuItem, { backgroundColor: `${color}` }]} />,
+        users: <Feather name="users" size={24} color="white" style={[styles.iconMenuItem, { backgroundColor: `${color}` }]} />,
+        bookOpen: <Feather name="book-open" size={24} color="white" style={[styles.iconMenuItem, { backgroundColor: `${color}` }]} />,
+        documentText: <Ionicons name="document-text-outline" size={24} color="white" style={[styles.iconMenuItem, { backgroundColor: `${color}` }]} />,
+        documentsAdd: <Icon name="bookshelf" size={24} color="white" style={[styles.iconMenuItem, { backgroundColor: `${color}` }]}/>,
+        fileMultiple: <Icon name="file-multiple" size={24} color="white" style={[styles.iconMenuItem, { backgroundColor: `${color}` }]} />
     }
-    console.log(icon[iconName].icon)
 
 	return (
 		<View style={styles.cardBtn}>
