@@ -23,7 +23,7 @@ export default function Index() {
       </View>
       <View style={styles.loginContainer}>
         <Text style={{textAlign: "center", fontSize: 24, fontWeight: "bold"}}>Bem-vindo</Text>
-        <InputText textLabel="Email ou Login" placeholder="Digite seu email ou login"/>
+        <InputText textLabel="Email ou Login" placeholder="Digite seu email ou login" borderColor="off"/>
         <InputSecurity textLabel="Senha" placeholder="Digite sua senha"/>
         <TouchableOpacity style={{backgroundColor: "#317aff", padding: 10, borderRadius: 5}} onPress={AuthApp}>
           <Text style={{color: "#fff", fontWeight: "bold", textAlign: "center"}}>Entrar</Text>

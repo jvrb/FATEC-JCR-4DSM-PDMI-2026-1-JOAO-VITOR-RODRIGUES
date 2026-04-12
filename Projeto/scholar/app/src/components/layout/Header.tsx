@@ -1,21 +1,42 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { global } from "../../styles/global";
 
 interface IHeader {
 	titlePage: string;
 	descriptionHeader: string;
 	userName: string;
+	color: string;
+	nameScreenNow: string
 }
 
-function backFromHome() {
-	return router.replace("/");
-}
+export default function Header({ titlePage, descriptionHeader, userName, color, nameScreenNow }: IHeader) {
 
-export default function Header({ titlePage, descriptionHeader, userName }: IHeader) {
+	function backFrom() {
+		if(nameScreenNow == "aluno") {
+			return router.replace("/src/screens/Alunos/Index")
+		}else if(nameScreenNow == "professor"){
+			return router.replace("/src/screens/Professores/Index")
+		}else if(nameScreenNow == "disciplina"){
+			return router.replace("/src/screens/Disciplina/Index")
+		}else if(nameScreenNow == "boletim"){
+			return router.replace("/src/screens/Boletim/Index")
+		}else if(nameScreenNow == "home"){
+			return router.replace("/")
+		}
+
+		return router.replace("/src/screens/Dashboard");
+	}
+
+	const colors: any = {
+		blueColor: "#2577ff",
+		greenColor: "#00c14d",
+		purpleColor: "#a232ff",
+		orangeColor: "#ff6200",
+	};
+
 	return (
-		<View style={styles.body}>
+		<View style={[styles.body, { backgroundColor: colors[color] }]}>
 			<View style={styles.header}>
 				<View style={styles.userAction}>
 					<View style={styles.headerBtn}>
@@ -25,7 +46,7 @@ export default function Header({ titlePage, descriptionHeader, userName }: IHead
 						<Text style={{ fontWeight: "bold", fontSize: 20, color: "#fff" }}>Sistema Acadêmico</Text>
 						<Text style={{ fontWeight: 300, fontSize: 14, color: "#fff" }}>{userName}</Text>
 					</View>
-					<TouchableOpacity style={styles.headerBtn} onPress={backFromHome}>
+					<TouchableOpacity style={styles.headerBtn} onPress={backFrom}>
 						<FontAwesome name="sign-out" size={20} color="white" />
 					</TouchableOpacity>
 				</View>
@@ -66,6 +87,5 @@ const styles = StyleSheet.create({
 	body: {
 		width: "100%",
 		alignItems: "center",
-		backgroundColor: "#317aff",
-	}
+	},
 });
