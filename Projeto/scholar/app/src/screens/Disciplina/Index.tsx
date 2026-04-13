@@ -11,6 +11,10 @@ export default function Index() {
         return router.replace("/src/screens/Disciplina/FormNewDisciplina")
     }
 
+    function goToListDisciplinas(){
+        return router.replace("/src/screens/Disciplina/ListDisciplinas")
+    }
+
     return (
         <SafeAreaView>
             <Header titlePage="Disciplinas" descriptionHeader="Selecione uma opção" userName="USER_NAME" color="purpleColor" nameScreenNow=""/>
@@ -19,7 +23,9 @@ export default function Index() {
                     <TouchableOpacity onPress={goToFormNewDisciplina}>
                         <CardMenu iconName="bookOpen" color="#a232ff" titleCard="Adicionar Diciplina" descriptionCard="Adicione disciplinas ao sistema"/>
                     </TouchableOpacity>
-                    <CardMenu iconName="documentsAdd" color="#a232ff" titleCard="Listar Disciplinas" descriptionCard="Verifique as disciplinas cadastradas"/>
+                    <TouchableOpacity onPress={goToListDisciplinas}>
+                        <CardMenu iconName="documentsAdd" color="#a232ff" titleCard="Listar Disciplinas" descriptionCard="Verifique as disciplinas cadastradas"/>
+                    </TouchableOpacity>
                 </View>
             </View>
         </SafeAreaView>

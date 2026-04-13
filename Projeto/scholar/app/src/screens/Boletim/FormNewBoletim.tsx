@@ -12,13 +12,13 @@ export default function FormNewBoletim() {
 			<Header color="orangeColor" descriptionHeader="Cadastro de Boletim" titlePage="Cadastro" userName="USER_NAME" nameScreenNow="boletim"/>
 			<View style={global.bodyScroll}>
 				<ScrollView style={global.container} contentContainerStyle={global.scrollContent} showsVerticalScrollIndicator={false}>
-					<InputText placeholder="Desenvolvimento Mobile" textLabel="Disciplina" borderColor="orangeColor" />
+					<InputText placeholder="Desenvolvimento Mobile" textLabel="Boletim" borderColor="orangeColor" />
 					<InputText placeholder="10" textLabel="Nota 1" borderColor="orangeColor" />
 					<InputText placeholder="10" textLabel="Nota 2" borderColor="orangeColor" />
 					<InputText placeholder="10" textLabel="Média" borderColor="orangeColor" />
 					<InputText placeholder="Aprovado" textLabel="Situação" borderColor="orangeColor" />
 					<TouchableOpacity style={{ backgroundColor: "#ff6200", padding: 10, borderRadius: 5, marginTop: 10 }} >
-						<Text style={{ color: "#fff", fontWeight: "bold", textAlign: "center" }}>Cadastrar Disciplina</Text>
+						<Text style={{ color: "#fff", fontWeight: "bold", textAlign: "center" }}>Cadastrar Boletim</Text>
 					</TouchableOpacity>
 				</ScrollView>
 			</View>

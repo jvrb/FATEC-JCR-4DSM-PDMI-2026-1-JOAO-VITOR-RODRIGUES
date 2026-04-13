@@ -11,6 +11,10 @@ export default function Index() {
         return router.replace("/src/screens/Alunos/FormNewAluno")
     }
 
+	function goToListAlunos(){
+		return router.replace("/src/screens/Alunos/ListAlunos")
+	}
+
 	return (
 		<SafeAreaView>
 			<Header titlePage="Alunos" descriptionHeader="Selecione uma opção" userName="USER_NAME" color="blueColor" nameScreenNow=""/>
@@ -19,7 +23,9 @@ export default function Index() {
 					<TouchableOpacity onPress={goToFormNewAluno}>
 						<CardMenu iconName="userAdd" color="#2577ff" titleCard="Adicionar Aluno" descriptionCard="Adicione alunos ao sistema"/>
 					</TouchableOpacity>
-					<CardMenu iconName="users" color="#2577ff" titleCard="Listar Alunos" descriptionCard="Verifique os alunos cadastrados"/>
+					<TouchableOpacity onPress={goToListAlunos}>
+						<CardMenu iconName="users" color="#2577ff" titleCard="Listar Alunos" descriptionCard="Verifique os alunos cadastrados"/>
+					</TouchableOpacity>
 				</View>
 			</View>
 		</SafeAreaView>

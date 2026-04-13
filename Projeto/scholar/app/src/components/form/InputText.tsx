@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 interface IInputText {
 	textLabel: string;
 	placeholder: string;
-	borderColor: string
+	borderColor: string;
 }
 
 export default function InputText({textLabel, placeholder, borderColor}: IInputText) {
@@ -20,7 +20,7 @@ export default function InputText({textLabel, placeholder, borderColor}: IInputT
 	return (
 		<View style={styles.inputContainer}>
 			<Text style={styles.textLabel}>{textLabel}</Text>
-			<TextInput placeholder={placeholder} style={[styles.inputText, { borderColor: borderColors[borderColor], borderWidth: 1}]} />
+			<TextInput placeholder={placeholder} style={[styles.inputText, { borderColor: borderColors[borderColor], borderWidth: 1}]}/>
 		</View>
 	);
 }

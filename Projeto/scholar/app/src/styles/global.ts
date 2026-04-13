@@ -19,7 +19,7 @@ export const global = StyleSheet.create({
 		gap: 10,
 	},
 	container: {
-		width: "85%",
+		width: "90%",
 		height: "30%",
 	},
 	bodyScroll: {
