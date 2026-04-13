@@ -11,6 +11,10 @@ export default function Index() {
         return router.replace("/src/screens/Boletim/FormNewBoletim")
     }
 
+    function goToBoletim(){
+        return router.replace("/src/screens/Boletim/ListBoletim")
+    }
+
     return (
         <SafeAreaView>
             <Header titlePage="Boletim" descriptionHeader="Selecione uma opção" userName="USER_NAME" color="orangeColor" nameScreenNow=""/>
@@ -19,7 +23,9 @@ export default function Index() {
                     <TouchableOpacity onPress={goToFormNewBoletim}>
                         <CardMenu iconName="documentText" color="#ff6200" titleCard="Adicionar Boletim" descriptionCard="Adicione um boletim ao sistema"/>
                     </TouchableOpacity>
-                    <CardMenu iconName="fileMultiple" color="#ff6200" titleCard="Listar Notas" descriptionCard="Verifique as notas cadastradas"/>
+                    <TouchableOpacity onPress={goToBoletim}>
+                        <CardMenu iconName="fileMultiple" color="#ff6200" titleCard="Listar Notas" descriptionCard="Verifique as notas cadastradas"/>
+                    </TouchableOpacity>
                 </View>
             </View>
         </SafeAreaView>
