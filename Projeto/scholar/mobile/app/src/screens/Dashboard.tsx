@@ -44,7 +44,7 @@ export default function Dashboard() {
 			<Header titlePage="Bem-Vindo!" descriptionHeader="Seja Bem-Vindo" color="blueColor" nameScreenNow="home" />
 			<View style={global.body}>
 				<View style={global.btnMenu}>
-					{(user.role === "ALUNO") && (<TouchableOpacity onPress={goToAlunos}>
+					{(user.role === "ADMIN") && (<TouchableOpacity onPress={goToAlunos}>
 						<CardMenu iconName="userAdd" titleCard="Alunos" descriptionCard="Gerenciar informações de alunos" color="#2577ff" />
 					</TouchableOpacity>)}
 					{(user.role === "ADMIN") && (
