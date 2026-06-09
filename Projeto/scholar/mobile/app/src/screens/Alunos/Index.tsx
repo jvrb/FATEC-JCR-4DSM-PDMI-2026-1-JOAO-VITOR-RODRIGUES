@@ -1,0 +1,38 @@
+import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Header from "../../components/layout/Header";
+import { TouchableOpacity, View } from "react-native";
+import CardMenu from "../../components/dashboard/CardMenu";
+import { global } from "../../../../styles/global";
+import { useAuth } from "../../hooks/useAuth";
+
+export default function Index() {
+	function goToFormNewAluno() {
+		return router.replace("/src/screens/Alunos/FormNewAluno");
+	}
+
+	function goToListAlunos() {
+		return router.replace("/src/screens/Alunos/ListAlunos");
+	}
+
+	const {user} = useAuth()
+
+	return (
+		<SafeAreaView>
+			<Header titlePage="Alunos" descriptionHeader="Selecione uma opção" color="blueColor" nameScreenNow="" />
+			<View style={global.body}>
+				<View style={global.btnMenu}>
+					{(user.role === "ADMIN") && (
+					<TouchableOpacity onPress={goToFormNewAluno}>
+						<CardMenu iconName="userAdd" color="#2577ff" titleCard="Adicionar Aluno" descriptionCard="Adicione alunos ao sistema" />
+					</TouchableOpacity>)}
+
+					{(user.role === "ADMIN") && (
+					<TouchableOpacity onPress={goToListAlunos}>
+						<CardMenu iconName="users" color="#2577ff" titleCard="Listar Alunos" descriptionCard="Verifique os alunos cadastrados" />
+					</TouchableOpacity>)}
+				</View>
+			</View>
+		</SafeAreaView>
+	);
+}

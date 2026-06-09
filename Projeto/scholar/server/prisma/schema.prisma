@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Aluno {
+  id        String     @id @default(uuid())
+  nome      String
+  email     String
+  usuarioId String     @unique
+  turmaId   String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  turma     Turma?     @relation(fields: [turmaId], references: [id])
+  usuario   Usuario    @relation(fields: [usuarioId], references: [id])
+  endereco  Endereco?
+  matricula Matricula?
+  nota      Nota[]
+}
+
+model Endereco {
+  id        String   @id @default(uuid())
+  cep       String
+  endereco  String
+  cidade    String
+  estado    String
+  alunoId   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  aluno     Aluno    @relation(fields: [alunoId], references: [id])
+}
+
+model Matricula {
+  id        String   @id @default(uuid())
+  numero    String   @unique
+  alunoId   String   @unique
+  cursoId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  aluno     Aluno    @relation(fields: [alunoId], references: [id])
+  curso     Curso    @relation(fields: [cursoId], references: [id])
+}
+
+model Curso {
+  id         String      @id @default(uuid())
+  nome       String
+  semestre   Int
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  matriculas Matricula[]
+  turmas     Turma[]
+}
+
+model Turma {
+  id          String            @id @default(uuid())
+  nome        String
+  cursoId     String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  alunos      Aluno[]
+  curso       Curso             @relation(fields: [cursoId], references: [id])
+  disciplinas TurmaDisciplina[]
+}
+
+model Disciplina {
+  id          String            @id @default(uuid())
+  nome        String
+  professorId String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  professor   Professor?        @relation(fields: [professorId], references: [id])
+  notas       Nota[]
+  turmas      TurmaDisciplina[]
+}
+
+model TurmaDisciplina {
+  id           String     @id @default(uuid())
+  turmaId      String
+  disciplinaId String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id])
+  turma        Turma      @relation(fields: [turmaId], references: [id])
+
+  @@unique([turmaId, disciplinaId])
+}
+
+model Professor {
+  id            String       @id @default(uuid())
+  nome          String
+  titulacao     String
+  area          String
+  tempoDocencia Int
+  email         String       @unique
+  usuarioId     String       @unique
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  disciplinas   Disciplina[]
+  usuario       Usuario      @relation(fields: [usuarioId], references: [id])
+}
+
+model Nota {
+  id           String     @id @default(uuid())
+  nota1        Float
+  nota2        Float
+  disciplinaId String
+  alunoId      String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  aluno        Aluno      @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id], onDelete: Cascade)
+}
+
+model Usuario {
+  id                 String     @id @default(uuid())
+  nome               String
+  sobrenome          String
+  email              String     @unique
+  password           String
+  role               Role
+  mustChangePassword Boolean    @default(false)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  aluno              Aluno?
+  professor          Professor?
+}
+
+enum Role {
+  ALUNO
+  PROFESSOR
+  ADMIN
+}
