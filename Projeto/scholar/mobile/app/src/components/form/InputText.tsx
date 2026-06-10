@@ -8,9 +8,7 @@ interface IInputText {
 	onChangeText: (text: string) => void;
 }
 
-export default function InputText({textLabel, placeholder, borderColor, value, onChangeText}: IInputText) {
-
-
+export default function InputText({ textLabel, placeholder, borderColor, value, onChangeText }: IInputText) {
 	const borderColors: any = {
 		blueColor: "#2577ff",
 		greenColor: "#00c14d",
@@ -19,28 +17,35 @@ export default function InputText({textLabel, placeholder, borderColor, value, o
 		off: "#f3f3f5",
 		blackColor: "#000",
 		redColor: "#ff0000",
-	}
+	};
 
 	return (
 		<View style={styles.inputContainer}>
 			<Text style={styles.textLabel}>{textLabel}</Text>
-			<TextInput placeholder={placeholder} style={[styles.inputText, { borderColor: borderColors[borderColor], borderWidth: 1}]} value={value} onChangeText={onChangeText} />
+			<TextInput
+				placeholder={placeholder}
+				style={[styles.inputText, { borderColor: borderColors[borderColor], borderWidth: 1 }]}
+				value={value}
+				onChangeText={onChangeText}
+			/>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-    inputContainer: {
-        gap: 5,
-		marginTop: 10
-    },
-    textLabel: {
-        fontWeight: "bold"
-    },
+	inputContainer: {
+		width: "100%",
+		alignSelf: "stretch",
+		gap: 5,
+		marginTop: 10,
+	},
+	textLabel: {
+		fontWeight: "bold",
+	},
 	inputText: {
 		backgroundColor: "#f3f3f5",
 		borderRadius: 5,
 		padding: 10,
-		
+		width: "100%",
 	},
 });

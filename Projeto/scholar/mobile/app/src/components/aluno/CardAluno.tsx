@@ -29,9 +29,11 @@ export default function CardAluno({email, matricula, turma, usuario}: CardAlunoT
 
 const styles = StyleSheet.create({
     cardAluno: {
+        width: "100%",
         borderColor: "#2577ff",
         borderWidth: 1,
         borderRadius: 4,
-        padding: 10
+        padding: 15,
+        marginBottom: 10
     }
 })

@@ -9,6 +9,7 @@ import { useEffect } from "react";
 
 export default function Dashboard() {
 	const { user } = useAuth();
+	const role = user?.role || user?.usuario?.role;
 
 	useEffect(() => {
 		if(!user) {
@@ -38,16 +39,22 @@ export default function Dashboard() {
 	function goToCurso() {
 		return router.replace("/src/screens/Cursos/Index");
 	}
+	function goToConfigAluno(){
+		return router.replace("/src/screens/Usuario/EditUsario");
+	}
 
 	return (
 		<SafeAreaView style={global.home}>
 			<Header titlePage="Bem-Vindo!" descriptionHeader="Seja Bem-Vindo" color="blueColor" nameScreenNow="home" />
 			<View style={global.body}>
 				<View style={global.btnMenu}>
-					{(user.role === "ADMIN") && (<TouchableOpacity onPress={goToAlunos}>
+					{(role === "ADMIN") && (<TouchableOpacity onPress={goToAlunos}>
 						<CardMenu iconName="userAdd" titleCard="Alunos" descriptionCard="Gerenciar informações de alunos" color="#2577ff" />
 					</TouchableOpacity>)}
-					{(user.role === "ADMIN") && (
+					{(role === "ALUNO") && (<TouchableOpacity onPress={goToConfigAluno}>
+						<CardMenu iconName="userAdd" titleCard="Aluno" descriptionCard="Gerenciar informações de alunos" color="#2577ff" />
+					</TouchableOpacity>)}
+					{(role === "ADMIN") && (
 						<TouchableOpacity onPress={goToProfessores}>
 							<CardMenu iconName="users" titleCard="Professores" descriptionCard="Gerenciar informações de Professores" color="#00c14d" />
 						</TouchableOpacity>
@@ -58,7 +65,7 @@ export default function Dashboard() {
 					<TouchableOpacity onPress={goToBoletim}>
 						<CardMenu iconName="documentText" titleCard="Boletim" descriptionCard="Visualizar notas e situação" color="#ff6200" />
 					</TouchableOpacity>
-					{(user.role === "ADMIN") && (
+					{(role === "ADMIN") && (
 					<TouchableOpacity onPress={goToCurso}>
 						<CardMenu iconName="graduationCap" titleCard="Cursos" descriptionCard="Visualizar Cursos" color="#ff0000" />
 					</TouchableOpacity>)}

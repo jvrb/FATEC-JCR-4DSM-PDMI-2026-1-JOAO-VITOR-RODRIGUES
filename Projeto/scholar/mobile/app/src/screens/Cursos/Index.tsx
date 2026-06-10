@@ -16,13 +16,18 @@ export default function Index() {
 	}
 
 	const {user} = useAuth()
+	const role = user?.role || user?.usuario?.role;
 
 	return (
-		<SafeAreaView>
+		<SafeAreaView style={{flex: 1}}>
 			<Header titlePage="Cursos" descriptionHeader="Selecione uma opção" color="redColor" nameScreenNow="" />
-			<View style={global.body}>
+			<View style={{
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
 				<View style={global.btnMenu}>
-					{(user.role === "ADMIN") &&
+					{(role === "ADMIN") &&
 					<TouchableOpacity onPress={goToFormNewCurso}>
 						<CardMenu iconName="plus" color="#ff0000" titleCard="Adicionar Curso" descriptionCard="Adicione um novo curso ao sistema" />
 					</TouchableOpacity>}

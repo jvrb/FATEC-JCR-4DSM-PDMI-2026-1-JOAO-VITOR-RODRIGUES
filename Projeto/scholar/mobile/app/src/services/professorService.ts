@@ -3,7 +3,7 @@ import { API_URL } from "./api";
 export async function createProfessor(nome: string,sobrenome: string, titulacao: string, areaAtuacao: string, tempoDocencia: string, email: string){
     // { nome, sobrenome, email, password, titulacao, area, tempoDecencia }
     const docenciaConvert = Number(tempoDocencia)
-    const newProfessor = await fetch(API_URL, {
+    const newProfessor = await fetch(`${API_URL}/professor`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

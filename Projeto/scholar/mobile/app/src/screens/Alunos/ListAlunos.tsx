@@ -11,49 +11,55 @@ import { useAuth } from "../../hooks/useAuth";
 import CardAluno from "../../components/aluno/CardAluno";
 
 async function gatAllAlunos() {
-	const alunos = await fetch("http://localhost:3333/aluno")
-	const respJson = await alunos.json()
+	const alunos = await fetch("http://localhost:3333/aluno");
+	const respJson = await alunos.json();
 
-	return respJson
+	return respJson;
 }
 
 export default function ListAlunos() {
+	const [alunosMap, setAlunosMap] = useState<[]>([]);
 
-	const [alunosMap, setAlunosMap] = useState<[]>([])
+	const { user } = useAuth();
 
-	const { user } = useAuth() 
-
-	console.log("Cheguei aqui: ",user)
+	console.log("Cheguei aqui: ", user);
 
 	useEffect(() => {
-		if(user.role === "ADMIN"){
+		if (user.role === "ADMIN") {
 			async function loadAlunos() {
-				const listAlunos = await gatAllAlunos()
+				const listAlunos = await gatAllAlunos();
 
-				console.log(listAlunos)
-				setAlunosMap(listAlunos)
+				console.log(listAlunos);
+				setAlunosMap(listAlunos);
 			}
 
-			loadAlunos()
+			loadAlunos();
 		}
-	}, [])
+	}, []);
 
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
+		<SafeAreaView
+			style={{
+				flex: 1,
+				backgroundColor: "#fff",
+				alignItems: "center",
+			}}
+		>
 			<Header color="blueColor" descriptionHeader="Pesquisar Aluno" titlePage="Aluno" nameScreenNow="aluno" />
-			<View style={global.bodyScroll}>
-				<Search colorHeader="blueColor" label="Pesquisar Aluno" placeHolder="Andre"></Search>
-				<ScrollView style={global.container} contentContainerStyle={global.scrollContent} showsVerticalScrollIndicator={false}>
 
-				{alunosMap.length > 0 && (alunosMap.map((aluno: any) => (
-					<CardAluno 
-						email={aluno.email}
-						matricula={aluno.matricula}
-						turma={aluno.turma}
-						usuario={aluno.usuario}
-					/>
-				)))}	
+			<View
+				style={{
+					flex: 1,
+					width: "100%",
+					alignItems: "center",
+				}}
+			>
+				<Search colorHeader="blueColor" label="Pesquisar Aluno" placeHolder="Andre" />
 
+				<ScrollView style={{width: "95%"}} contentContainerStyle={global.scrollContent} showsVerticalScrollIndicator={false}>
+					{alunosMap.map((aluno: any) => (
+						<CardAluno key={aluno.id} email={aluno.email} matricula={aluno.matricula} turma={aluno.turma} usuario={aluno.usuario} />
+					))}
 				</ScrollView>
 			</View>
 		</SafeAreaView>

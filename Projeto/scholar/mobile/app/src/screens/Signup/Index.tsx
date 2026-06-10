@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Image, TextInput, Button, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, Image, TextInput, Button, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 
@@ -13,6 +13,8 @@ import SelectInput from "../../components/form/SelectInput";
 import Toast from "react-native-toast-message";
 import SelectCursos from "../../components/form/SelectCursos";
 
+import { global } from "@/styles/global";
+
 export async function getCursos() {
 	const data = await fetch("http://localhost:3333/curso");
 	const cursos = await data.json();
@@ -24,38 +26,67 @@ export default function Index() {
 	const [nome, setNome] = useState<string>("");
 	const [sobrenome, setSobrenome] = useState<string>("");
 	const [email, setEmail] = useState<string>("");
+	const [cep, setCep] = useState<string>("");
+	const [endereco, setEndereco] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [confirmPassword, setconfirmPassword] = useState<string>("");
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [curso, setCurso] = useState<string>("");
+	const [cidade, setCidade] = useState<string>("");
+	const [estado, setEsatdo] = useState("");
+	const [msgVerify, setMsgVerify] = useState("");
 	const [listCursos, setListCursos] = useState<[]>([]);
+	const [estadosIBGE, setEstadosIBGE] = useState<any[]>([]);
 
 	const { setUser, setToken } = useAuth();
-
-	const handleNome = (text: string) => {
-		setNome(text);
-		setErrorMsg("");
-	};
-	const handleSobrenome = (text: string) => {
-		setSobrenome(text);
-		setErrorMsg("");
-	};
-	const handleEmail = (text: string) => {
-		setEmail(text);
-		setErrorMsg("");
-	};
-	const handlePassword = (text: string) => {
-		setPassword(text);
-		setErrorMsg("");
-	};
-	const handleConfirmPassword = (text: string) => {
-		setconfirmPassword(text);
-		setErrorMsg("");
-	};
 
 	function goToDashboard() {
 		return router.replace("../../../");
 	}
+
+	async function buscarCep(cep: string) {
+		try {
+			const cepLimpo = cep.replace(/\D/g, "");
+
+			if (cepLimpo.length !== 8) return;
+
+			const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+
+			const data = await response.json();
+
+			if (data.erro) {
+				setMsgVerify("CEP não encontrado");
+				return;
+			}
+
+			setEndereco(data.logradouro);
+			setCidade(data.localidade);
+			setEsatdo(data.uf);
+		} catch (error) {
+			console.log(error);
+			setMsgVerify("Erro ao consultar CEP");
+		}
+	}
+
+	useEffect(() => {
+		async function loadEstados() {
+			const response = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados");
+
+			const data = await response.json();
+
+			setEstadosIBGE(data);
+		}
+
+		loadEstados();
+	}, []);
+
+	useEffect(() => {
+		const cepLimpo = cep.replace(/\D/g, "");
+
+		if (cepLimpo.length === 8) {
+			buscarCep(cepLimpo);
+		}
+	}, [cep]);
 
 	useEffect(() => {
 		async function loadCursos() {
@@ -96,6 +127,10 @@ export default function Index() {
 					email,
 					password,
 					cursoId: curso,
+					cep,
+					endereco,
+					cidade,
+					estado
 				}),
 			});
 
@@ -107,6 +142,7 @@ export default function Index() {
 					text1: "Erro",
 					text2: responseJson.messageError,
 				});
+				console.log(responseJson.messageError)
 			}
 
 			if (responseJson.messageSuccess) {
@@ -134,35 +170,74 @@ export default function Index() {
 
 				<Text style={{ fontSize: 14, textAlign: "center", color: "#fff" }}>Gestão Educacional</Text>
 			</View>
-			<View style={styles.loginContainer}>
-				<Text style={{ textAlign: "center", fontSize: 24, fontWeight: "bold" }}>Cadastre-se</Text>
-				<InputText textLabel="Nome" placeholder="Digite seu nome" borderColor="off" value={nome} onChangeText={handleNome} />
 
-				<InputText textLabel="Sobrenome" placeholder="Digite seu sobrenome" borderColor="off" value={sobrenome} onChangeText={handleSobrenome} />
+			<ScrollView
+				style={[global.bodyScroll, { width: "90%", marginBottom: 20 }]}
+				contentContainerStyle={styles.scrollContent}
+				showsVerticalScrollIndicator={false}
+			>
+				<View style={styles.loginContainer}>
+					<Text
+						style={{
+							textAlign: "center",
+							fontSize: 24,
+							fontWeight: "bold",
+						}}
+					>
+						Cadastre-se
+					</Text>
+					<InputText textLabel="Nome" placeholder="Digite seu nome" borderColor="off" value={nome} onChangeText={setNome} />
 
-				<SelectCursos value={curso} onChange={setCurso}/>
+					<InputText textLabel="Sobrenome" placeholder="Digite seu sobrenome" borderColor="off" value={sobrenome} onChangeText={setSobrenome} />
 
+					<SelectCursos value={curso} onChange={setCurso} />
 
-				<InputText textLabel="Email ou Login" placeholder="Digite seu email ou login" borderColor="off" value={email} onChangeText={handleEmail} />
+					<InputText textLabel="Email" placeholder="Digite seu email" borderColor="off" value={email} onChangeText={setEmail} />
 
-				<InputSecurity textLabel="Senha" placeholder="Digite sua senha" value={password} onChangeText={handlePassword} />
+					<InputText textLabel="Cep" placeholder="Digite seu cep" borderColor="off" value={cep} onChangeText={setCep} />
 
-				<InputSecurity textLabel="Confime a senha" placeholder="Confime sua senha" value={confirmPassword} onChangeText={handleConfirmPassword} />
+					<InputText textLabel="Endereço" placeholder="Preenchido automaticamente" borderColor="off" value={endereco} onChangeText={setEndereco} />
 
-				<TouchableOpacity style={{ backgroundColor: "#317aff", padding: 10, borderRadius: 5 }} onPress={Signup}>
-					<Text style={{ color: "#fff", fontWeight: "bold", textAlign: "center" }}>Cadastrar</Text>
-				</TouchableOpacity>
+					<InputText textLabel="Cidade" placeholder="Preenchido automaticamente" borderColor="off" value={cidade} onChangeText={setCidade} />
 
-				{errorMsg && <ErrorMessage msg={errorMsg} />}
-			</View>
-			<View style={styles.signup}>
-				<Text>
-					Já possui conta?
-					<TouchableOpacity onPress={() => goToDashboard()}>
-						<Text style={styles.signupLink}>Login</Text>
+					<InputText textLabel="Estado" placeholder="Preenchido automaticamente" borderColor="off" value={estado} onChangeText={setEsatdo} />
+
+					<InputSecurity textLabel="Senha" placeholder="Digite sua senha" value={password} onChangeText={setPassword} />
+
+					<InputSecurity textLabel="Confirme a senha" placeholder="Confirme sua senha" value={confirmPassword} onChangeText={setconfirmPassword} />
+
+					<Text>{msgVerify}</Text>
+					<TouchableOpacity
+						style={{
+							backgroundColor: "#317aff",
+							padding: 10,
+							borderRadius: 5,
+						}}
+						onPress={Signup}
+					>
+						<Text
+							style={{
+								color: "#fff",
+								fontWeight: "bold",
+								textAlign: "center",
+							}}
+						>
+							Cadastrar
+						</Text>
 					</TouchableOpacity>
-				</Text>
-			</View>
+
+					{errorMsg && <ErrorMessage msg={errorMsg} />}
+				</View>
+
+				<View style={styles.signup}>
+					<Text>
+						Já possui conta?
+						<TouchableOpacity onPress={goToDashboard}>
+							<Text style={styles.signupLink}> Login</Text>
+						</TouchableOpacity>
+					</Text>
+				</View>
+			</ScrollView>
 		</SafeAreaView>
 	);
 }
@@ -171,38 +246,46 @@ const styles = StyleSheet.create({
 	container: {
 		backgroundColor: "#317aff",
 		flex: 1,
-		justifyContent: "center",
 		alignItems: "center",
 	},
-	loginContainer: {
-		backgroundColor: "#fff",
-		width: "80%",
-		borderRadius: 15,
-		padding: 25,
-		gap: 25,
-	},
+
 	header: {
 		height: "15%",
 		justifyContent: "space-around",
 		alignItems: "center",
-		marginBottom: 40,
-		marginTop: -70,
+		marginBottom: 20,
+		marginTop: 20,
 	},
+
+	scrollContent: {
+		alignItems: "center",
+		paddingVertical: 20,
+	},
+
+	loginContainer: {
+		backgroundColor: "#fff",
+		width: "95%",
+		borderRadius: 15,
+		padding: 25,
+		gap: 25,
+	},
+
 	imgLogo: {
 		backgroundColor: "#fff",
 		width: 70,
 		height: 70,
-		padding: 10,
 		borderRadius: 50,
-		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
 	},
+
 	signup: {
-		marginTop: 30,
+		marginTop: 20,
+		marginBottom: 20,
 	},
+
 	signupLink: {
-		color: "#fff",
-		marginLeft: 5,
+		color: "#317aff",
+		fontWeight: "bold",
 	},
 });

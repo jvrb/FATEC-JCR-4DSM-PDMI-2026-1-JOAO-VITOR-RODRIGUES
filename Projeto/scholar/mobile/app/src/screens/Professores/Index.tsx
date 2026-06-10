@@ -15,9 +15,13 @@ export default function Index() {
 	}
 
 	return (
-		<SafeAreaView>
-			<Header titlePage="Professores" descriptionHeader="Selecione uma opção" userName="USER_NAME" color="greenColor" nameScreenNow="" />
-			<View style={global.body}>
+		<SafeAreaView style={{flex: 1}}>
+			<Header titlePage="Professores" descriptionHeader="Selecione uma opção" color="greenColor" nameScreenNow="" />
+			<View style={{
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
 				<View style={global.btnMenu}>
 					<TouchableOpacity onPress={goToFormNewProfessor}>
 						<CardMenu iconName="userAdd" color="#00c14d" titleCard="Adicionar Professor" descriptionCard="Adicione Professor ao sistema" />

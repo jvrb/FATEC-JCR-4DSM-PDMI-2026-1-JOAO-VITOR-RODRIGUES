@@ -1,7 +1,7 @@
 import { prisma } from "../lib/prisma";
 import { gerarMatriculaUnica } from "../utils/gerarMatricula";
 import { Role } from "../../generated/prisma";
-
+import * as enderecoService from "../service/enderecoService";
 
 export const getAlunos = async () => {
 	return prisma.aluno.findMany({
@@ -11,7 +11,7 @@ export const getAlunos = async () => {
 					curso: true,
 				},
 			},
-			usuario: true
+			usuario: true,
 		},
 	});
 };
@@ -24,7 +24,7 @@ export const getAlunoById = async (userId: any) => {
 		include: {
 			matricula: {
 				include: {
-					curso: true
+					curso: true,
 				},
 			},
 			endereco: true,
@@ -34,16 +34,26 @@ export const getAlunoById = async (userId: any) => {
 				include: {
 					disciplinas: {
 						include: {
-							disciplina: true
-						}
-					}
-				}
-			}
+							disciplina: true,
+						},
+					},
+				},
+			},
 		},
 	});
 };
 
-export const createUserAluno = async (nome: string, sobrenome: string, email: string, password: string, cursoId: string) => {
+export const createUserAluno = async (
+	nome: string,
+	sobrenome: string,
+	email: string,
+	password: string,
+	cursoId: string,
+	cep: string,
+	endereco: string,
+	cidade: string,
+	estado: string,
+) => {
 	try {
 		const emailExiste = await prisma.usuario.findUnique({
 			where: {
@@ -53,7 +63,7 @@ export const createUserAluno = async (nome: string, sobrenome: string, email: st
 		let newUser;
 
 		if (emailExiste) {
-			newUser = emailExiste
+			newUser = emailExiste;
 		} else {
 			newUser = await prisma.usuario.create({
 				data: {
@@ -74,39 +84,77 @@ export const createUserAluno = async (nome: string, sobrenome: string, email: st
 			},
 		});
 
-		console.log(newAluno)
-
 		// Gerar matricula
 		const matricula = await gerarMatriculaUnica(newAluno.id, cursoId);
-		console.log(matricula)
-        return
+
+		const enderecAluno = await enderecoService.updateEndereco(newAluno.id, cep, endereco, cidade, estado);
+
+		return newUser;
 	} catch (error) {
 		return `Erro ao cadastrar o aluno. ${error}`;
 	}
 };
 
-export const updateAluno = async (alunoId: string, name: string, email: string) => {
-	return await prisma.aluno.update({
-		where: {
-			id: alunoId,
-		},
-		data: {
-			name,
-			email,
-		},
-	});
+export const updateAluno = async (
+	alunoId: string,
+	nome: string,
+	sobrenome: string,
+	email: string,
+	cep: string,
+	endereco: string,
+	cidade: string,
+	estado: string,
+) => {
+	try {
+		const usuario = await prisma.usuario.update({
+			where: {
+				id: alunoId,
+			},
+			data: {
+				nome,
+				sobrenome,
+				email,
+			},
+		});
+
+		const aluno = await prisma.aluno.update({
+			where: {
+				usuarioId: usuario.id,
+			},
+			data: {
+				nome,
+				email,
+			},
+		});
+
+		await prisma.endereco.update({
+			where: {
+				alunoId: aluno.id,
+			},
+			data: {
+				cep,
+				endereco,
+				cidade,
+				estado,
+			},
+		});
+
+		return "Aluno Atualizado com sucesso!";
+	} catch (error: any) {
+		return `Não foi possivel atualizar o aluno ${error.message}`;
+	}
 };
 
 export const updateAlunoTurma = async (alunoId: string, idTurma: string) => {
 	return await prisma.aluno.update({
 		where: {
-			id: alunoId
+			id: alunoId,
 		},
 		data: {
-			turmaId: idTurma
-		}
-	})
-}
+			turmaId: idTurma,
+		},
+	});
+};
 
 export const deleteAluno = async (alunoId: string) => {
 	try {
@@ -133,3 +181,19 @@ export const deleteAluno = async (alunoId: string) => {
 		return `Não foi possivel deletar esse aluno. ${error}`;
 	}
 };
+
+export async function vincularAlunoTurma(alunoId: string, turmaId: string) {
+	const aluno = await prisma.aluno.update({
+		where: {
+			id: alunoId,
+		},
+		data: {
+			turmaId,
+		},
+		include: {
+			turma: true,
+		},
+	});
+
+	return aluno;
+}

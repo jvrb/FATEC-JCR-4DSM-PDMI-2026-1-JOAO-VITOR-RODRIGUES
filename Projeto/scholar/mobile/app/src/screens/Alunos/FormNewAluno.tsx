@@ -71,7 +71,9 @@ export default function FormNewAluno() {
 		<SafeAreaView style={{ flex: 1 }}>
 			<Header color="blueColor" descriptionHeader="Cadastro de Aluno" titlePage="Cadastro" nameScreenNow="aluno" />
 			<View style={global.bodyScroll}>
-				<ScrollView style={global.container} contentContainerStyle={global.scrollContent} showsVerticalScrollIndicator={false}>
+				<ScrollView style={{width: "100%",
+                maxWidth: 730, // opcional
+                alignSelf: "center"}}contentContainerStyle={global.scrollContent} showsVerticalScrollIndicator={false}>
 					<Text>{msgVerify}</Text>
 					<InputText placeholder="Nome" textLabel="Nome do Aluno" borderColor="blueColor" value={nomeAluno} onChangeText={setNomeAluno} />
 					<InputText placeholder="Desenvolvimento de Software" textLabel="Curso" borderColor="blueColor" value={curso} onChangeText={setCurso} />

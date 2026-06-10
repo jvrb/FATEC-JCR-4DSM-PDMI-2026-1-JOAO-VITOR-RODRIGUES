@@ -14,6 +14,7 @@ export default function CardDisciplina({nameDisciplina}: CardDisciplinaTypes){
 
 const styles = StyleSheet.create({
     cardDisiciplina: {
+        width: "100%",
         borderColor: "#a232ff",
         borderWidth: 1,
         borderRadius: 4,

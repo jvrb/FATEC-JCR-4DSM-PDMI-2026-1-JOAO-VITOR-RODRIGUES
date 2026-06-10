@@ -45,10 +45,12 @@ export default function CardProfessor({ id, area, disciplinas, email, tempoDocen
 
 const styles = StyleSheet.create({
 	cardProfessor: {
+		width: "100%",
 		borderColor: "#00c14d",
 		borderWidth: 1,
 		borderRadius: 4,
 		padding: 10,
+		marginBottom: 5
 	},
     btns: {
         display: "flex",

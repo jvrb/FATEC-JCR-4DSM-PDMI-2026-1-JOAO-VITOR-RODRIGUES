@@ -25,6 +25,8 @@ export default function Header({ titlePage, descriptionHeader, color, nameScreen
 			return router.replace("/")
 		}else if(nameScreenNow == "curso"){
 			return router.replace("/src/screens/Cursos/Index")
+		}else if(nameScreenNow == "configAluno"){
+			return router.replace("/src/screens/Dashboard");
 		}
 
 		return router.replace("/src/screens/Dashboard");

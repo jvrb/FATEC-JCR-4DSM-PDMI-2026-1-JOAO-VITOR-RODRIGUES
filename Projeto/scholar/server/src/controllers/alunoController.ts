@@ -19,34 +19,34 @@ export const getAlunoById = async (req: Request, res: Response) => {
 };
 
 export const createAluno = async (req: Request, res: Response) => {
-	const { nome, sobrenome, email, password, cursoId } = req.body;
+	const { nome, sobrenome, email, password, cursoId, cep, endereco, cidade, estado } = req.body;
 	try {
-		if(!nome){
-			return res.send({messageError: "Preencha o nome"});
+		if (!nome) {
+			return res.send({ messageError: "Preencha o nome" });
 		}
-		if(!sobrenome){
-			return res.send({messageError: "Preencha o sobrenome"});
+		if (!sobrenome) {
+			return res.send({ messageError: "Preencha o sobrenome" });
 		}
-		if(!email){
-			return res.send({messageError: "Preencha o email"});
+		if (!email) {
+			return res.send({ messageError: "Preencha o email" });
 		}
-		if(!password){
-			return res.send({messageError: "Preencha a senha"});
+		if (!password) {
+			return res.send({ messageError: "Preencha a senha" });
 		}
 
 		const hashSenha = await hashPwd(password);
 
-		const newAluno = await alunoService.createUserAluno(nome, sobrenome, email, hashSenha, cursoId);
+		const newAluno = await alunoService.createUserAluno(nome, sobrenome, email, hashSenha, cursoId, cep, endereco, cidade, estado);
 
-		return res.send({messageSuccess: "Aluno Criado com sucesso!", aluno: newAluno});
+		return res.send({ messageSuccess: "Aluno Criado com sucesso!", aluno: newAluno });
 	} catch (error) {
-		console.log(`Não foi possivel criar o usuario. ${error}`);
+		return res.send({ messageError: `Não foi possivel criar o usuario. ${error}` });
 	}
 };
 
 export const updateAluno = async (req: Request, res: Response) => {
 	const { id } = req.params;
-	const { nome, email, cep, endereco, cidade, estado } = req.body;
+	const { nome, sobrenome, email, cep, endereco, cidade, estado } = req.body;
 
 	try {
 		if (!id) {
@@ -56,12 +56,11 @@ export const updateAluno = async (req: Request, res: Response) => {
 			return res.send("Preencha Todos os campos.");
 		}
 
-		const updateAluno = await alunoService.updateAluno(id.toString(), nome, email);
+		const updateAluno = await alunoService.updateAluno(id.toString(), nome, sobrenome, email, cep, endereco, cidade, estado);
 
-		const updateEndereco = await enderecoService.updateEndereco(id.toString(), cep, endereco, cidade, estado);
-
-		if (updateAluno && updateEndereco) {
-			return res.send("Aluno atualizado com sucesso.");
+		console.log(updateAluno);
+		if (updateAluno) {
+			return res.send({ messageSuccess: "Aluno atualizado com sucesso" });
 		} else {
 			throw Error;
 		}
@@ -88,4 +87,21 @@ export const deleteAluno = async (req: Request, res: Response) => {
 	}
 };
 
+export async function vincularAlunoTurmaController(req: Request, res: Response) {
+	try {
+		const { alunoId, turmaId } = req.body;
 
+		console.log({ alunoId, turmaId })
+
+		const aluno = await alunoService.vincularAlunoTurma(alunoId, turmaId);
+
+		return res.json({
+			messageSuccess: "Aluno vinculado à turma com sucesso",
+			aluno,
+		});
+	} catch (error) {
+		return res.status(400).json({
+			messageError: "Erro ao vincular aluno",
+		});
+	}
+}

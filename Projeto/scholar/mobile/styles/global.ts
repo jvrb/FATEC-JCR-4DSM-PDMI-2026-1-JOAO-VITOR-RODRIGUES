@@ -1,38 +1,43 @@
 import { StyleSheet } from "react-native";
 
 export const global = StyleSheet.create({
-    home: {
-		height: "100%",
+	home: {
+		flex: 1,
 		width: "100%",
 		backgroundColor: "#317aff",
 		alignItems: "center",
 	},
-    body: {
-		height: "100%",
+
+	body: {
+		flex: 1,
 		width: "100%",
 		backgroundColor: "#fff",
 		alignItems: "center",
 	},
+
 	btnMenu: {
 		width: "90%",
 		marginTop: -10,
 		gap: 10,
 	},
+
 	container: {
 		width: "90%",
 	},
+
 	bodyScroll: {
 		flex: 1,
 		width: "100%",
 		backgroundColor: "#fff",
-		alignItems: "center",
-		
+		borderRadius: 20,
+		paddingBottom: 20
 	},
+
 	scrollContent: {
-		flexGrow: 1,
 		paddingBottom: 20,
-		border: "none",
-		borderWidth: 1,
-		gap: 5
+		width: "100%",
+		padding: 20,
+		alignItems: "center",
+		flexGrow: 1
 	},
-})
+});

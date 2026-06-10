@@ -94,7 +94,7 @@ export default function ListProfessores() {
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<Header color="greenColor" descriptionHeader="Pesquisar Professor" titlePage="Professor" nameScreenNow="professor" />
-			<View style={global.bodyScroll}>
+			<View style={[global.bodyScroll, {alignItems: "center"}]}>
 				<Search colorHeader="greenColor" label="Pesquisar Professor" placeHolder="Andre"></Search>
 				<ScrollView style={global.container} contentContainerStyle={global.scrollContent} showsVerticalScrollIndicator={false}>
 					{listProfessores.length > 0 &&

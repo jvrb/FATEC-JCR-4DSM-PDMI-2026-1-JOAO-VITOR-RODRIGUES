@@ -7,7 +7,7 @@ export const updateEndereco = async(alunoId: string, cep: string, endereco: stri
             alunoId
         }
     })
-
+    console.log(alunoId)
     if(!existeEndereco) {
         return await prisma.endereco.create({
             data: {

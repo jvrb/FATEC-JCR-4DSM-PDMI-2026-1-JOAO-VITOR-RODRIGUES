@@ -46,7 +46,7 @@ export default function FormNewProfessor() {
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<Header color="greenColor" descriptionHeader="Cadastro de Professor" titlePage="Cadastro" nameScreenNow="professor" />
-			<View style={global.bodyScroll}>
+			<View style={[global.bodyScroll, {alignItems: "center"}]}>
 				<ScrollView style={global.container} contentContainerStyle={global.scrollContent} showsVerticalScrollIndicator={false}>
 					<InputText placeholder="Nome" textLabel="Nome do Professor" borderColor="greenColor" value={nomeProfessor} onChangeText={setNomeProfessor}/>
 					<InputText placeholder="Sobrenome" textLabel="Sobrenome do Professor" borderColor="greenColor" value={sobrenomeProfessor} onChangeText={setSobrenomeProfessor}/>
