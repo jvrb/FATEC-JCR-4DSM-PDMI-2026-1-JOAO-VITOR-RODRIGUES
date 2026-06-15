@@ -6,9 +6,10 @@ import { getAllProfessores } from "../../services/professorService";
 interface ISelecTurma {
     value: string;
 	onChange: (value: string) => void;
+	label: string
 }
 
-export default function SelectProfessor({ value, onChange }: ISelecTurma) {
+export default function SelectProfessor({ value, onChange, label = "Professor" }: ISelecTurma) {
 	const [professores, setProfessores] = useState<[]>([]);
 	const [professorSelecionado, setProfessorSelecionado] = useState("");
 
@@ -23,7 +24,7 @@ export default function SelectProfessor({ value, onChange }: ISelecTurma) {
 
 	return (
 		<View style={styles.inputContainer}>
-			<Text style={styles.textLabel}>Professor</Text>
+			<Text style={styles.textLabel}>{label}</Text>
 			<Picker
 				selectedValue={value}
 				style={styles.inputText}
@@ -32,7 +33,7 @@ export default function SelectProfessor({ value, onChange }: ISelecTurma) {
 					onChange(itemValue);
 				}}
 			>
-				<Picker.Item label="Professor" value="" />
+				<Picker.Item label="Professor" value="" enabled={false}/>
 
 				{professores.map((data: any) => (
 					<Picker.Item key={data.id} label={data.nome} value={data.id} />

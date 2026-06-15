@@ -47,9 +47,15 @@ model Matricula {
 }
 
 model Curso {
-  id         String      @id @default(uuid())
-  nome       String
-  semestre   Int
+  id       String @id @default(uuid())
+  nome     String
+  semestre Int
+
+  area String
+
+  coordenadorId String?
+  coordenador   Professor? @relation("CursoCoordenador", fields: [coordenadorId], references: [id])
+
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   matriculas Matricula[]
@@ -91,17 +97,19 @@ model TurmaDisciplina {
 }
 
 model Professor {
-  id            String       @id @default(uuid())
+  id            String @id @default(uuid())
   nome          String
   titulacao     String
   area          String
   tempoDocencia Int
-  email         String       @unique
-  usuarioId     String       @unique
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  disciplinas   Disciplina[]
-  usuario       Usuario      @relation(fields: [usuarioId], references: [id])
+
+  cursosCoordenador Curso[]      @relation("CursoCoordenador")
+  email             String       @unique
+  usuarioId         String       @unique
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  disciplinas       Disciplina[]
+  usuario           Usuario      @relation(fields: [usuarioId], references: [id])
 }
 
 model Nota {

@@ -34,6 +34,9 @@ export default function Index() {
 					<TouchableOpacity onPress={goToListCursos}>
 						<CardMenu iconName="list" color="#ff0000" titleCard="Listar Cursos" descriptionCard="Verifique os cursos cadastrados" />
 					</TouchableOpacity>
+					<TouchableOpacity onPress={goToListCursos}>
+						<CardMenu iconName="list" color="#ff0000" titleCard="Listar Cursos" descriptionCard="Verifique os cursos cadastrados" />
+					</TouchableOpacity>
 				</View>
 			</View>
 		</SafeAreaView>

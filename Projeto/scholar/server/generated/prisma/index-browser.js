@@ -156,6 +156,8 @@ exports.Prisma.CursoScalarFieldEnum = {
   id: 'id',
   nome: 'nome',
   semestre: 'semestre',
+  area: 'area',
+  coordenadorId: 'coordenadorId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

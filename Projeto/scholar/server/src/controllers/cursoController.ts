@@ -11,7 +11,7 @@ export const getCursos = async(req: Request, res: Response) => {
 export const createCurso = async(req: Request, res: Response) => {
 
     try {
-        const {nome, semestre} = req.body
+        const {nome, semestre, area, coordenadorId} = req.body
         if(!nome) {
             return res.send({message: "Preencha o nome do curso."})
         }
@@ -19,7 +19,7 @@ export const createCurso = async(req: Request, res: Response) => {
             return res.send({message: "Preencha quantos semestres tem o curso."})
         }
 
-        const curso = await cursoService.createCurso(nome, semestre)
+        const curso = await cursoService.createCurso(nome, semestre, area, coordenadorId)
         const turmas = await turmaService.gerarTurmas(curso.nome, curso.semestre)
 
         await Promise.all(
@@ -39,24 +39,17 @@ export const updateCurso = async(req: Request, res: Response) => {
     
     try {
         const { id } = req.params
-        const { nome, semestre } = req.body
+        const { nome, semestre, area, coordenadorId } = req.body
 
         if(!nome || !id) {
             return res.send({messageError: "O curso não pode ficar sem nome"})
         }
 
-        await cursoService.updateCurso(id.toString(), nome, semestre)
-        const turmas = await turmaService.gerarTurmas(nome, semestre)
-
-        await Promise.all(
-            turmas.map((turma: string) => 
-                turmaService.createTurma(turma, id.toString())
-            )
-        )
+        await cursoService.updateCurso(id.toString(), nome, semestre, area, coordenadorId)
 
         return res.send({messageSuccess: "Curso atualizado com sucesso."})
     } catch (error) {
-        console.log({messageError: `Não foi possivel atualizar esse curso. ${error}`})
+        return res.send({messageError: `Não foi possivel atualizar esse curso. ${error}`})
     }
 }
 

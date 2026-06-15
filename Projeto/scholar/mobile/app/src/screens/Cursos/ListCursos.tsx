@@ -10,6 +10,8 @@ import { useAuth } from "../../hooks/useAuth";
 import CardCurso from "../../components/curso/CardCurso";
 import Toast from "react-native-toast-message";
 import { Modal } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import SelectProfessor from "../../components/form/SelectProfessor";
 
 async function gatAllCursos() {
 	const cursos = await fetch("http://localhost:3333/curso");
@@ -27,7 +29,7 @@ async function deleteCurso(id: string) {
 	return respDelete;
 }
 
-async function editCurso(id: string, nome: string, semestre: number) {
+async function editCurso(id: string, nome: string, semestre: number, area: string, coordenadorId: string) {
 	const editCurso = await fetch(`http://localhost:3333/curso/${id}`, {
 		method: "PUT",
 		headers: {
@@ -36,6 +38,8 @@ async function editCurso(id: string, nome: string, semestre: number) {
 		body: JSON.stringify({
 			nome,
 			semestre,
+			area, 
+			coordenadorId
 		}),
 	});
 
@@ -50,6 +54,8 @@ export default function ListCursos() {
 	const [cursoSelecionado, setCursoSelecionado] = useState<any>(null);
 	const [nome, setNome] = useState<string>("");
 	const [semestre, setSemestre] = useState("");
+	const [areaCurso, setAreaCurso] = useState("");
+	const [coordenador, setCoordenador] = useState("");
 
 	const { user } = useAuth();
 
@@ -64,12 +70,15 @@ export default function ListCursos() {
 		if (user.role === "ADMIN") {
 			loadCursos();
 		}
+
+		
 	}, []);
 
+	console.log(cursosMap)
 	async function handleSaveEdit() {
 		if (!cursoSelecionado) return;
 
-		const cursoEdited = await editCurso(cursoSelecionado.id, nome, Number(semestre));
+		const cursoEdited = await editCurso(cursoSelecionado.id, nome, Number(semestre), areaCurso, coordenador);
 
 		if (cursoEdited) {
 			await loadCursos();
@@ -105,16 +114,26 @@ export default function ListCursos() {
 
 		setNome(curso.nome);
 		setSemestre(curso.semestre.toString());
+		setAreaCurso(curso.area)
+		setCoordenador(curso.coordenadorId)
 
-		setModalVisible(true);
+		setModalVisible(true)
 	}
 
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
+		<SafeAreaView style={{
+				flex: 1,
+				backgroundColor: "#fff",
+				alignItems: "center",
+			}}>
 			<Header color="redColor" descriptionHeader="Pesquisar Curso" titlePage="Curso" nameScreenNow="curso" />
-			<View style={global.bodyScroll}>
+			<View style={{
+					flex: 1,
+					width: "100%",
+					alignItems: "center",
+				}}>
 				<Search colorHeader="redColor" label="Pesquisar Curso" placeHolder="Desenvolvimento de Software Multiplataforma"></Search>
-				<ScrollView style={global.container} contentContainerStyle={global.scrollContent} showsVerticalScrollIndicator={false}>
+				<ScrollView style={{width: "95%"}} contentContainerStyle={global.scrollContent} showsVerticalScrollIndicator={false}>
 					{cursosMap.length > 0 &&
 						cursosMap.map((curso: any) => (
 							<CardCurso
@@ -122,6 +141,8 @@ export default function ListCursos() {
 								nome={curso.nome}
 								semestre={curso.semestre}
 								turmas={curso.turmas}
+								area={curso.area}
+								coordenador={curso.coordenador.nome}
 								onDelete={() => handleDelete(curso.id)}
 								onEdit={() => handleOpenModal(curso)}
 							/>
@@ -136,6 +157,26 @@ export default function ListCursos() {
 						<TextInput style={styles.input} value={nome} onChangeText={setNome} placeholder="Nome do Curso" />
 
 						<TextInput style={styles.input} value={semestre} onChangeText={setSemestre} placeholder="Quantidade de Semestres" keyboardType="numeric" />
+
+						<View style={styles.selectArea}>
+							<Text style={{ fontWeight: "bold", marginBottom: 5 }}>Area:</Text>
+							<Picker
+								selectedValue={areaCurso}
+								style={styles.inputText}
+								onValueChange={(itemValue) => {
+									setAreaCurso(itemValue);
+								}}
+							>
+								<Picker.Item label="SELECIONE A AREA" value="" enabled={false}/>
+								<Picker.Item label="TECNOLOGIA" value="TECNOLOGIA" />
+								<Picker.Item label="SAÚDE" value="SAÚDE" />
+								<Picker.Item label="ENGENHARIA" value="ENGENHARIA" />
+								<Picker.Item label="GESTÃO" value="GESTÃO" />
+								<Picker.Item label="HUMANAS" value="HUMANAS" />
+								<Picker.Item label="HUMANAS" value="HUMANAS" />
+							</Picker>
+						</View>
+						<SelectProfessor value={coordenador} onChange={setCoordenador} label="Coordenador"/>
 
 						<View style={styles.buttons}>
 							<TouchableOpacity style={styles.btnSave} onPress={handleSaveEdit}>
@@ -207,5 +248,17 @@ const styles = StyleSheet.create({
 		color: "#fff",
 		textAlign: "center",
 		fontWeight: "bold",
+	},
+	selectArea: {
+		width: "100%",
+		textAlign: "left",
+		fontWeight: "bold",
+		marginTop: 8,
+	},
+	inputText: {
+		backgroundColor: "#f3f3f5",
+		borderColor: "red",
+		borderRadius: 5,
+		padding: 10,
 	},
 });

@@ -5,17 +5,21 @@ interface CardCursoTypes {
     id: string;
 	nome: string;
 	semestre: number;
+	area: string,
+	coordenador: string,
 	turmas: [];
     onEdit: (id: string, nome: string, semestre: number) => void;
     onDelete: (id: string) => void;
 }
 
-export default function CardCurso({ id, nome, semestre, turmas, onEdit, onDelete }: CardCursoTypes) {
+export default function CardCurso({ id, nome, semestre, turmas,area, coordenador, onEdit, onDelete }: CardCursoTypes) {
 	return (
 		<View style={styles.cardCurso}>
 			<View>
 				<Text>{nome}</Text>
 				<Text>Semestres: {semestre}</Text>
+				<Text>Area: {area}</Text>
+				<Text>Coordenador: {coordenador}</Text>
 				<Text>
 					Turmas:{" "}
 					<Text style={styles.listTurmas}>
